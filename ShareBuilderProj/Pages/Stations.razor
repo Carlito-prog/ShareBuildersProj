@@ -1,0 +1,61 @@
+﻿@page "/stations"
+@inject NavigationManager navManager;
+@inject StationService stationService;
+@inject UserModel userModel;
+@*@inject StationModel station*@
+
+
+<PageTitle> All Stations </PageTitle>
+
+<h3>All Stations</h3>
+
+<table>
+    <thead>
+        <tr>
+            <th> Letters </th>
+            <th> Market </th>
+            <th> Affiliation </th>
+            <th>
+                Users
+                <button @onclick="(()=>HandleAddUser())"> Add User </button>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var station in stations)
+        {
+            <tr>
+                <td> @station.Letters</td>
+                <td> @station.Market</td>
+                <td> @station.Affiliation</td>
+                <select>
+                    @foreach (var user in stations[station.Users.Count()].Users)
+                    {
+                        <option> @user.FirstName, @user.LastName, @user.Age </option>
+                       // <p @onclick="(()=>HandleDelete(user.Id))" class="btn btn-danger"> x </p>
+                    }
+                </select>
+            </tr>
+
+        }
+    </tbody>
+</table>
+
+@code {
+    private List<StationModel> stations;
+
+    protected override void OnInitialized()
+    {
+        this.stations = stationService.GetStations();
+    }
+    public void HandleAddUser()
+    {
+        navManager.NavigateTo("/user");
+    }
+
+    //public void HandleDelete(int userId)
+    //{
+    //    stationService.DeleteUser(userId);
+    //}
+}
+

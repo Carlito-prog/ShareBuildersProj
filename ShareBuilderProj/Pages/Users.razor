@@ -1,0 +1,47 @@
+﻿@page  "/user"
+@inject NavigationManager navManager;
+
+@inject StationService stationService;
+@inject UserModel userModel;
+
+
+<EditForm Model="@userModel" OnValidSubmit="@HandleSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <p>
+        <label for="FirstNameInput">
+            FirstName:
+            <InputText @bind-Value="userModel.FirstName" />
+        </label>
+        <label for="FirstNameInput">
+            LastName:
+            <InputText @bind-Value="userModel.LastName" />
+        </label>
+        <label for="FirstNameInput">
+            Age:
+            <InputNumber @bind-Value="userModel.Age" />
+        </label>
+    </p>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+    <button @onclick="@HandleCancel" type="button" class="btn btn-danger">Cancel</button>
+</EditForm>
+
+@code {
+
+    public void HandleSubmit(EditContext editContext)
+    {
+        var newUser = (UserModel)editContext.Model;
+        newUser.CreatedDate = DateTime.Now;
+        stationService.AddUser(newUser);
+        navManager.NavigateTo("/staion");
+    }
+
+    public void HandleCancel()
+    {
+        navManager.NavigateTo("/stations");
+    }
+
+}
+
