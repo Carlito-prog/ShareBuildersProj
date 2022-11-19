@@ -40,15 +40,18 @@ namespace ShareBuilderProj.Services
 			}
 
 		}
-		public void DeleteUser(int UserId, int StationId)
+		public void DeleteUser(int userId, int StationId)
 		{
             using (var context = _dbContextFactory.CreateDbContext())
 			{
-				var station = context.Stations.Single(x => x.Id == StationId);
-				var user = context.Users.Where(x => EF.Property<int>(x, station.Id.ToString()) == UserId);
+				var station = context.Stations.Single(x => x.Id == StationId);// station with that id
+				var users = context.Users.Where(x => EF.Property<int>(x, "StationModelId") == StationId && x.Id == userId ); // user with that stationId
+				foreach(var user in users)
+				{
+					station?.Users?.Remove(user);
+				}
                 context.SaveChanges();
             }
-
         }
 	}
 }
